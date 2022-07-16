@@ -1,11 +1,11 @@
-name: 🔂 Surge PR Preview - Teardown
+name: 🔂 Surge PR Teardown
 
 on:
   pull_request:
     types: [closed]
 
 jobs:
-  preview:
+  teardown:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
