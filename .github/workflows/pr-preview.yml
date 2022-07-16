@@ -10,9 +10,6 @@ jobs:
       - uses: subosito/flutter-action@v2
         with:
           channel: 'stable'
-      - run: flutter pub get
-      - run: flutter test
-      - run: flutter build web
       - uses: afc163/surge-preview@v1
         id: preview_step
         with:
@@ -21,6 +18,7 @@ jobs:
           dist: build/web
           build: |
             flutter pub get
+            flutter test
             flutter build web
       - name: Get the preview_url
         run: echo "url => ${{ steps.preview_step.outputs.preview_url }}"
