@@ -1,8 +1,9 @@
-name: 🔂 Surge PR Preview
+name: 🔂 Deploy to surge
 
 on:
-  pull_request:
-    types: [opened, reopened]
+  push:
+    branches:
+      - main
 
 jobs:
   preview:
