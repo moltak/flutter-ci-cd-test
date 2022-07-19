@@ -33,13 +33,4 @@ jobs:
           token: ${{ secrets.SURGE_TOKEN }}
       - name: Get the deploy_url
         run: echo "url => https://${{ env.url }}"
-      - name: Slack Notification
-        uses: rtCamp/action-slack-notify@v2
-        env:
-          SLACK_CHANNEL: automation 
-          SLACK_ICON: https://github.com/rtCamp.png?size=48
-          SLACK_TITLE: Github
-          SLACK_MESSAGE: '${{ env.GITHUB_REPOSITORY }} 배포됨: ${{ env.url  }}'
-          SLACK_USERNAME: rtCamp
-          SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK }}
       
