@@ -71,9 +71,12 @@ jobs:
         filename: ${{ env.filename }}
         directory: build/windows/runner/Release
     - name: Windows Release
-      uses: ncipollo/release-action@v1
+      id: windows_release
+      uses: softprops/action-gh-release@v1
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       with:
-        token: ${{ secrets.GITHUB_TOKEN }}
-        tag: ${{ env.tag }}
-        bodyFile: 'build/windows/runner/Release/${{ env.filename }}'
-
+        files: 'build/windows/runner/Release/${{ env.filename }}'
+        tag_name: ${{ env.tag }}
+    - run: echo ${{ steps.windows_release.outputs.url }}
+    - run: echo ${{ steps.windows_release.outputs.upload_url }}
