@@ -79,4 +79,3 @@ jobs:
         files: 'build/windows/runner/Release/${{ env.filename }}'
         tag_name: ${{ env.tag }}
     - run: echo ${{ steps.windows_release.outputs.url }}
-    - run: echo ${{ steps.windows_release.outputs.upload_url }}
