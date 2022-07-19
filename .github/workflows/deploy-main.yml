@@ -4,9 +4,11 @@ on:
   push:
     branches:
       - main
+env:
+  url: 'dotheal-cloud-signage-desktop-client.surge.sh'
 
 jobs:
-  preview:
+  deploy-main:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
@@ -20,13 +22,14 @@ jobs:
           channel: "stable"
       - name: install dependencies
         run: flutter pub get
-      - uses: afc163/surge-preview@v1
-        id: preview_step
+      - name: build
+        run: flutter build web
+      - name: Deploy to surge.sh
+        uses: dswistowski/surge-sh-action@v1
         with:
-          surge_token: ${{ secrets.SURGE_TOKEN }}
-          github_token: ${{ secrets.GITHUB_TOKEN }}
-          dist: build/web
-          build: |
-            flutter build web
+          domain: ${{ env.url }}
+          project: 'build/web'
+          login: ${{ secrets.SURGE_LOGIN }}
+          token: ${{ secrets.SURGE_TOKEN }}
       - name: Get the preview_url
-        run: echo "url => ${{ steps.preview_step.outputs.preview_url }}"
+        run: echo "url => https://${{ env.url }}"
