@@ -42,8 +42,12 @@ jobs:
     runs-on: windows-latest
     env:
       filename: project-${{github.ref_name}}-windows.zip
+      tag: 'latest'
     steps:
     - uses: actions/checkout@v3
+    - uses: rickstaa/action-create-tag@v1
+      with:
+        tag: ${{ env.tag }}
     - name: Cache Flutter dependencies
       uses: actions/cache@v3
       with:
@@ -70,5 +74,6 @@ jobs:
       uses: ncipollo/release-action@v1
       with:
         token: ${{ secrets.GITHUB_TOKEN }}
-        files: 'build/windows/runner/Release/${{ env.filename }}'
+        tag: ${{ env.tag }}
+        bodyFile: 'build/windows/runner/Release/${{ env.filename }}'
 
