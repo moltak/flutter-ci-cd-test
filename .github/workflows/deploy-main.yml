@@ -6,12 +6,16 @@ on:
       - main
 env:
   url: 'dotheal-cloud-signage-desktop-client.surge.sh'
+  tag: 'latest'
 
 jobs:
   deploy-web:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
+      - uses: rickstaa/action-create-tag@v1
+        with:
+          tag: ${{ env.tag }}
       - name: Cache Flutter dependencies
         uses: actions/cache@v3
         with:
@@ -37,17 +41,13 @@ jobs:
           token: ${{ secrets.SURGE_TOKEN }}
       - name: Get the deploy_url
         run: echo "url => https://${{ env.url }}"
-    
+
   deploy-windows:
     runs-on: windows-latest
     env:
       filename: project-${{github.ref_name}}-windows.zip
-      tag: 'latest'
     steps:
     - uses: actions/checkout@v3
-    - uses: rickstaa/action-create-tag@v1
-      with:
-        tag: ${{ env.tag }}
     - name: Cache Flutter dependencies
       uses: actions/cache@v3
       with:
