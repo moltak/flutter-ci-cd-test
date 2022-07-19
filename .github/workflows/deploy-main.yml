@@ -8,7 +8,7 @@ env:
   url: 'dotheal-cloud-signage-desktop-client.surge.sh'
 
 jobs:
-  deploy-main:
+  deploy-web:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
@@ -20,6 +20,10 @@ jobs:
       - uses: subosito/flutter-action@v2
         with:
           channel: "stable"
+          cache: true
+          cache-key: flutter # optional, change this to force refresh cache
+          cache-path: ${{ runner.tool_cache }}/flutter # optional, change this to specify the cache path
+          architecture: x64 # optional, x64 or arm64
       - name: install dependencies
         run: flutter pub get
       - name: build
@@ -33,4 +37,38 @@ jobs:
           token: ${{ secrets.SURGE_TOKEN }}
       - name: Get the deploy_url
         run: echo "url => https://${{ env.url }}"
-      
+    
+  deploy-windows:
+    runs-on: windows-latest
+    env:
+      filename: project-${{github.ref_name}}-windows.zip
+    steps:
+    - uses: actions/checkout@v3
+    - name: Cache Flutter dependencies
+      uses: actions/cache@v3
+      with:
+        path: /opt/hostedtoolcache/flutter
+        key: ${{ runner.OS }}-flutter-install-cache-${{ env.flutter_version }}
+    - uses: subosito/flutter-action@v2
+      with:
+        channel: "stable"
+        cache: true
+        cache-key: flutter # optional, change this to force refresh cache
+        cache-path: ${{ runner.tool_cache }}/flutter # optional, change this to specify the cache path
+        architecture: x64 # optional, x64 or arm64
+    - run: flutter pub get
+    - run: flutter config --enable-windows-desktop
+    - name: Build artifacts
+      run: flutter build windows --release
+    - name: Archive Release
+      uses: thedoctor0/zip-release@main
+      with:
+        type: 'zip'
+        filename: ${{ env.filename }}
+        directory: build/windows/runner/Release
+    - name: Windows Release
+      uses: ncipollo/release-action@v1
+      with:
+        token: ${{ secrets.GITHUB_TOKEN }}
+        files: 'build/windows/runner/Release/${{ env.filename }}'
+
