@@ -31,5 +31,5 @@ jobs:
           project: 'build/web'
           login: ${{ secrets.SURGE_LOGIN }}
           token: ${{ secrets.SURGE_TOKEN }}
-      - name: Get the preview_url
+      - name: Get the deploy_url
         run: echo "url => https://${{ env.url }}"
